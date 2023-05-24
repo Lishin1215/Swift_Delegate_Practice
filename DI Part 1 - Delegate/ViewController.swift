@@ -9,12 +9,13 @@ import UIKit
 
 protocol SelectionViewDataSource: AnyObject {
     
-    var numberOfOptions: Int {get}
+    func numberOfOptions(for selectionView: SelectionView) -> Int
     func textForOption(at index: Int) -> String
-    var underlineColor: UIColor {get}
+    var underlineColor: UIColor {get} //只能取得數字，不能設定
     var optionTextColor: UIColor {get}
     var optionTextFont: UIFont {get}
 
+    
 }
 
 @objc protocol SelectionViewDelegate: AnyObject {
@@ -27,7 +28,32 @@ protocol SelectionViewDataSource: AnyObject {
 
 class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDelegate {
     
-    var numberOfOptions: Int = 2
+
+
+    let selectionViewTop = SelectionView()
+    let selectionViewBottom = SelectionView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        selectionViewTop.dataSource = self
+        selectionViewTop.delegate = self
+        
+        selectionViewBottom.dataSource = self
+        selectionViewBottom.delegate = self
+        
+    }
+    
+//MARK: DataSource
+    
+    func numberOfOptions(for selectionView: SelectionView) -> Int{
+        if selectionView == selectionViewTop{
+            return 2
+        } else if selectionView == selectionViewBottom{
+            return 3
+        }
+        return 0
+    }
     
     func textForOption(at index: Int) -> String {
         if index == 0 {
@@ -45,18 +71,6 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
     
     var optionTextFont: UIFont = UIFont.systemFont(ofSize: 18)
     
-
-    let selectionView = SelectionView()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        selectionView.dataSource = self
-        selectionView.delegate = self
-        
-    }
-    
-
     
 
 }
