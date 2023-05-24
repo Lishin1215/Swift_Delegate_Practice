@@ -29,18 +29,20 @@ protocol SelectionViewDataSource: AnyObject {
 class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDelegate {
     
 
-
-    let selectionViewTop = SelectionView()
-    let selectionViewBottom = SelectionView()
+    // pos -> position
+    let selectionViewTop = SelectionView(pos: "Top")
+    let selectionViewBottom = SelectionView(pos: "Bottom")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         selectionViewTop.dataSource = self
         selectionViewTop.delegate = self
+        // 確定建立dataSource後再建立畫面
+        selectionViewTop.buildView()
         
         selectionViewBottom.dataSource = self
         selectionViewBottom.delegate = self
+        selectionViewBottom.buildView()
         
     }
     

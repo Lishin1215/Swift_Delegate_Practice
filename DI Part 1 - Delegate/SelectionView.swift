@@ -15,6 +15,7 @@ class SelectionView: UIView {
     private var indicatorView: UIView!
     private var customView: UIView!
     
+    var pos: String?
     //初始化方法
 //    convenience init(buttonCount: Int) {
 //        self.init(frame: .zero)
@@ -32,16 +33,22 @@ class SelectionView: UIView {
 //            setUpView()
 //        }
     
-    init(){
+    init(pos: String){
         super.init(frame: .zero)
-        setUpView()
-        // 根據這個sectionView(self)是Top/ Bottom去放入對應的按鈕數量
-        createButtons(count: dataSource?.numberOfOptions(for: self) ?? 0)
-        
+        self.pos = pos
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // 包含createButton()和SetView()
+    func buildView(){
+        // 根據這個sectionView(self)是Top/ Bottom去放入對應的按鈕數量
+        createButtons(count: dataSource?.numberOfOptions(for: self) ?? 0)
+        setUpView()
     }
     
     
@@ -85,10 +92,14 @@ class SelectionView: UIView {
         for _ in 0..<count {
             let button = UIButton(type: .system)
             button.backgroundColor = .clear
+            button.setTitle(dataSource?.textForOption(at: count), for: .normal)
             buttons.append(button)
             addSubview(button)
             
             // Add constraints for buttons
+            
+            // if pos == "Top" -> 寬度大
+            // else if pos == "Bottom" -> 寬度小
             button.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 button.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 35),
