@@ -71,7 +71,7 @@ class SelectionView: UIView {
         NSLayoutConstraint.activate([
             indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             indicatorView.topAnchor.constraint(equalTo: buttons[0].bottomAnchor),
-            indicatorView.widthAnchor.constraint(equalToConstant: 70),
+            indicatorView.widthAnchor.constraint(equalToConstant: 85),
             indicatorView.heightAnchor.constraint(equalToConstant: 2)
         ])
                 
@@ -88,7 +88,7 @@ class SelectionView: UIView {
     private func createButtons(count: Int) {
         for buttonIndex in 0..<count {
             let button = UIButton(type: .system)
-            button.backgroundColor = .black
+            button.backgroundColor = .gray
             button.setTitle(dataSource?.textForOption(at: buttonIndex), for: .normal)
             button.setTitleColor(dataSource?.optionTextColor, for: .normal)
             
@@ -108,18 +108,18 @@ class SelectionView: UIView {
             button.translatesAutoresizingMaskIntoConstraints = false
             if buttonIndex == 0{
                NSLayoutConstraint.activate([
-                   button.leadingAnchor.constraint(equalTo: leadingAnchor),
+                   button.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
                    button.topAnchor.constraint(equalTo: topAnchor),
-                   button.widthAnchor.constraint(equalToConstant: 120),
+                   button.widthAnchor.constraint(equalToConstant: 85),
                    button.heightAnchor.constraint(equalToConstant: 50)
                ])
            }else{
                // 拿前一個button，用前一個button的trailingAnchor去對現在這個button的leadingAnchor
                let previous_button = buttons[buttonIndex - 1]
                NSLayoutConstraint.activate([
-                   button.leadingAnchor.constraint(equalTo: previous_button.trailingAnchor),
+                   button.leadingAnchor.constraint(equalTo: previous_button.trailingAnchor, constant: 30),
                    button.topAnchor.constraint(equalTo: topAnchor),
-                   button.widthAnchor.constraint(equalToConstant: 120),
+                   button.widthAnchor.constraint(equalToConstant: 85),
                    button.heightAnchor.constraint(equalToConstant: 50)
                ])
            }

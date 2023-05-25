@@ -104,7 +104,7 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         
         //判斷可不可以"更改selectionView的顏色"，可以的話return true, 不行則return false
         //在“操作下面的view"時，且"上面view為黃色"時 -->不能變色
-        if (selectionView == selectionViewBottom) && (selectionViewTop.backgroundColor == .yellow) {
+        if (selectionView == selectionViewBottom) && (selectionViewTop.customView.backgroundColor == .yellow) {
             return false
         } else {
             return true //跳到didSelect，執行變色
