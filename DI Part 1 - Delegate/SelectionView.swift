@@ -11,9 +11,9 @@ import UIKit
 
 class SelectionView: UIView {
 
-    private var buttons: [UIButton] = []
-    private var indicatorView: UIView!
-    private var customView: UIView!
+    var buttons: [UIButton] = [] //VC會用到，所以不private
+    var indicatorView: UIView!
+    var customView: UIView!
     
     weak var dataSource: SelectionViewDataSource?
     weak var delegate: SelectionViewDelegate?
@@ -59,6 +59,7 @@ class SelectionView: UIView {
         
         // Create custom view
         customView = UIView()
+        customView.backgroundColor = .red
         addSubview(customView)
        
         // Add constraints
@@ -68,7 +69,7 @@ class SelectionView: UIView {
         
         // Set constraints for indicator view
         NSLayoutConstraint.activate([
-            indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 35),
+            indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             indicatorView.topAnchor.constraint(equalTo: buttons[0].bottomAnchor),
             indicatorView.widthAnchor.constraint(equalToConstant: 70),
             indicatorView.heightAnchor.constraint(equalToConstant: 2)
@@ -77,9 +78,9 @@ class SelectionView: UIView {
         // Set constraints for custom view
         NSLayoutConstraint.activate([
             customView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            customView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 15),
+            customView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             customView.topAnchor.constraint(equalTo: indicatorView.bottomAnchor),
-            customView.heightAnchor.constraint(equalToConstant: 50)
+            customView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
     }
@@ -91,8 +92,8 @@ class SelectionView: UIView {
             button.setTitle(dataSource?.textForOption(at: buttonIndex), for: .normal)
             button.setTitleColor(dataSource?.optionTextColor, for: .normal)
             
-            // button的identifier，幫助我們知道這是第幾個button（button.tag 就是button的標籤）
-            button.tag = buttonIndex
+            //button的identifier，幫助我們知道這是第幾個button（button.tag 就是button的標籤）
+            button.tag = buttonIndex //Int
 
             buttons.append(button)
             addSubview(button)
@@ -102,9 +103,8 @@ class SelectionView: UIView {
                        
             
             // Add constraints for buttons
-            
-            // if pos == "Top" -> 寬度大
-            // else if pos == "Bottom" -> 寬度小
+                // if pos == "Top" -> 寬度大
+                // else if pos == "Bottom" -> 寬度小
             button.translatesAutoresizingMaskIntoConstraints = false
             if buttonIndex == 0{
                NSLayoutConstraint.activate([
@@ -129,7 +129,13 @@ class SelectionView: UIView {
     }
     
     @objc func buttonTapped(_ sender: UIButton){
-        // 用delegate?.shouldSelectedButton(...)，
+        //1. （按下button到執行完畢前）(should) -> 用delegate去判斷，要不要"改變selectionView的顏色"
+        let shouldChangeColor = delegate?.shouldSelectedButton?(self, at: sender.tag)
+        
+        //2. 確定要改變，button執行完畢後（did) －> 改變
+        if shouldChangeColor == true {
+            delegate?.didSelectedButton?(self, at: sender.tag)
+        }
         
         
         
