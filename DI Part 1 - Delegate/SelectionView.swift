@@ -15,19 +15,16 @@ class SelectionView: UIView {
     private var indicatorView: UIView!
     private var customView: UIView!
     
+    weak var dataSource: SelectionViewDataSource?
+    weak var delegate: SelectionViewDelegate?
+    
     var pos: String?
     //初始化方法
 //    convenience init(buttonCount: Int) {
 //        self.init(frame: .zero)
 //        createButtons(count:buttonCount)
 //    }
-//
-//    //初始化方法
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        setUpView()
-//    }
-//
+
 //    required init?(coder aDecoder: NSCoder) {
 //            super.init(coder: aDecoder)
 //            setUpView()
@@ -88,36 +85,55 @@ class SelectionView: UIView {
     }
     
     private func createButtons(count: Int) {
-        
-        for _ in 0..<count {
+        for buttonIndex in 0..<count {
             let button = UIButton(type: .system)
-            button.backgroundColor = .clear
-            button.setTitle(dataSource?.textForOption(at: count), for: .normal)
+            button.backgroundColor = .black
+            button.setTitle(dataSource?.textForOption(at: buttonIndex), for: .normal)
+            button.setTitleColor(dataSource?.optionTextColor, for: .normal)
+            
+            // button的identifier，幫助我們知道這是第幾個button（button.tag 就是button的標籤）
+            button.tag = buttonIndex
+
             buttons.append(button)
             addSubview(button)
+            
+            // addTarget for button，在使用這按下button的時候，會執行buttonTapped function
+           button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+                       
             
             // Add constraints for buttons
             
             // if pos == "Top" -> 寬度大
             // else if pos == "Bottom" -> 寬度小
             button.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                button.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 35),
-                button.topAnchor.constraint(equalTo: topAnchor, constant: 40),
-                button.widthAnchor.constraint(equalTo: widthAnchor),
-                button.heightAnchor.constraint(equalToConstant: 40)
-            ])
-            
+            if buttonIndex == 0{
+               NSLayoutConstraint.activate([
+                   button.leadingAnchor.constraint(equalTo: leadingAnchor),
+                   button.topAnchor.constraint(equalTo: topAnchor),
+                   button.widthAnchor.constraint(equalToConstant: 120),
+                   button.heightAnchor.constraint(equalToConstant: 50)
+               ])
+           }else{
+               // 拿前一個button，用前一個button的trailingAnchor去對現在這個button的leadingAnchor
+               let previous_button = buttons[buttonIndex - 1]
+               NSLayoutConstraint.activate([
+                   button.leadingAnchor.constraint(equalTo: previous_button.trailingAnchor),
+                   button.topAnchor.constraint(equalTo: topAnchor),
+                   button.widthAnchor.constraint(equalToConstant: 120),
+                   button.heightAnchor.constraint(equalToConstant: 50)
+               ])
+           }
+    
         }
         
     }
     
-    weak var dataSource: SelectionViewDataSource?
-    weak var delegate: SelectionViewDelegate?
-    
-    
-    
+    @objc func buttonTapped(_ sender: UIButton){
+        // 用delegate?.shouldSelectedButton(...)，
         
+        
+        
+    }
     
 
 
